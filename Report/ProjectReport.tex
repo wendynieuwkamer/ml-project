@@ -25,13 +25,30 @@ As the competition started at 30 August 2016, there were already quite some subm
 	\label{fig:showdown}
 \end{figure}
 
-As we did not have time to run experiments for all ten classifiers, we decided to look into five of them. We chose the K-neigbors, decision tree and Gaussian Naive Bayes as they had relatively decent accuracy at respectively 88\%, 65\%, and 57\%. Also, we had some background in these algorithms as they had been taught in our Machine Learning course. Additionally, we decided to choose either Ada boost or quadratic discriminant analysis as they could improve the most with found accuracies of 4.5\% and 2.5\%. 
+As we did not have time to run experiments for all ten classifiers, we decided to look into five of them. We chose the K-neigbors classifier, decision tree classifier and Gaussian Naive Bayes as they had relatively decent accuracy at respectively 88\%, 65\%, and 57\%. Also, we had some background in these algorithms as they had been taught in our Machine Learning course. Additionally, we decided to choose either Ada boost or quadratic discriminant analysis as they could improve the most with found accuracies of 4.5\% and 2.5\%. 
 
 \newpage
 \section{The algorithms}
+Before we could start optimizing the hyper-parameters we had to research the algorithms we chose. In order to discover the most relevant information for our experiment we aimed to answer the following questions:
+
+\begin{itemize}
+	\item How does the classifier work? 
+	\item Which hyper-parameters exist for each classifier??
+	\item Which hyper-parameters have the most effect on the classifier?
+\end{itemize}
+
+The answers to these questions are specific to the Scikit-Learn package.
 
 \subsection{K-neighbors}
+The k-neighbors algorithm classifies an object according to the k nearest objects from the training set. For a higher k noise might be filtered out, but class boundaries might become more vague and less accurate. Thus, it would be interesting to find out which value of k gives the highest accuracy for our dataset. There are two ways of computing the class from the neigbors. The first one is by giving all the neighbors equal weight, no matter how far or close they are.  The second is to give each neighbor a weight relative to its distance. The weighted version of the 
 
+\subsection{Decision Tree Classifier}
+
+\subsection{Gaussian Naive Bayes}
+
+\subsection{Ada Boost Classifier}
+
+\subsection{Quadratic Discriminant Analysis}
 
 \section{Choices made and justifications}
 Which classifiers you chose ; why?  
