@@ -35,7 +35,7 @@
 	
 	\begin{itemize}
 		\item How does the classifier work? 
-		\item Which hyper-parameters exist for each classifier??
+		\item Which hyper-parameters exist for each classifier?
 		\item Which hyper-parameters have the most effect on the classifier?
 	\end{itemize}
 	
@@ -47,19 +47,17 @@
 	\subsection{Decision Tree Classifier}
 	
 	\subsection{Gaussian Naive Bayes}
+WE did not choose this because....
 	
 	\subsection{Ada Boost Classifier}
 	
 	\subsection{Quadratic Discriminant Analysis}
+we did not choose this because ....
 
-\section{Choices made and justifications}
-	Which classifiers you chose ; why?  
-	Describe the relevant features of the classifiers.
 
-\newpage
 \section{Hyper parameter optimization}
 
-	The goal of hyper parameter optimization is to find the best hyperparameters for the given classifier, in order to optimise the loss function and to avoid overfitting \cite{Bergstra}. Hyperparameter optimisation is one of the most important steps in machine learning \cite{bardenet}. Some hyper parameter optimisation algorithms not only find the best hyperameters, but identify those that carry the most weight, \cite{Bergstra}.
+	The goal of hyper parameter optimization is to find the best hyperparameters for the given classifier, in order to optimise the loss function and to avoid overfitting \cite{Bergstra}. Hyperparameter optimization is one of the most important steps in machine learning \cite{bardenet}. Some hyper parameter optimisation algorithms not only find the best hyperparameters, but identify those that carry the most weight, \cite{Bergstra}.
 	We needed an algorithm to find the best way to tune the hyper parameters of our chosen classifiers.  As we were recommended grid search, this was the algorithm we decided to look into.  
 	
 	\subsection{Grid Search}
@@ -96,26 +94,28 @@ GridSearchCV(estimator, param_grid, scoring=None, fit_params=None,
 {hyperparameter: optimal value, hyperparameter: optimal value}
 		\end{lstlisting}
 
-\newpage
 
-\section{Solution}
-	How do we optimize them? k-fold cv, gridsearch
-\newpage
+	\subsection{Application of GridSearch}
 
-\section{Evaluation of Approach and Solution} 
-	All the curves, the results
+
+
 
 \newpage
 \section{Results}
 
-The accuracy of classifiers with optimised hyperparameters were graphed against those without optimised hyperparameters:
+The accuracy of classifiers with optimized hyper-parameters were graphed against those without optimized hyper-parameters:
 
 \includegraphics[scale=0.7]{acc_class}
 
 In each of the cases, grid search clearly improved the accuracy of the classifier. This highlights the importance of hyperparameter optimisation. 
+\section{Evaluation of Approach and Solution} 
+	How could we have done this better/differently?
+	Problems we ran into: learning curves of the algorithms.
+	Possibilities for further improvement/research.
+	
 
 \bibliographystyle{unsrt}
-\bibliography{ProjectReport}
+\bibliography{ProjectReportSources}
 
 
 \section{Sources}
