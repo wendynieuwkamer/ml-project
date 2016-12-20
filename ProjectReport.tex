@@ -83,14 +83,6 @@ GridSearchCV(estimator, param_grid, scoring=None, fit_params=None,
 		
 	cv stands for cross validation, which, when an integer is specified, is the amount of folds in KFold cross validation. Otherwise the default is 3 folds. 
 
-		Scoring allows you to choose to train for precision or recall. Precision is the fraction of retrieved instances that are relevant, whilst recall is the fraction of relevant instances that are retrieved.
-		
-		\begin{align*}
-		Precision &= true positive / true positive + false positive\\
-		Recall &= true positive / true positive + false negative 
-		\end{align*}
-		
-		We decided to focus on precision, as we wanted to tune the classifiers for accuracy, and therefore be able to compare them to the 10 classifier showdown, \cite{showdown}. 
 		
 \subsection{Our use of grid search}
 
