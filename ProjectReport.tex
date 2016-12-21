@@ -42,7 +42,7 @@
 	The answers to these questions are specific to the Scikit-Learn package.
 	
 	\subsection{K-neighbors}
-		The k-neighbors algorithm classifies an object according to the k nearest objects from the training set. For a higher k noise might be filtered out, but class boundaries might become more vague and less accurate. Thus, it would be interesting to find out which value of k gives the highest accuracy for our dataset. There are two ways of computing the class from the neigbors. The first one is by giving all the neighbors equal weight, no matter how far or close they are.  The second is to give each neighbor a weight relative to its distance. The weighted version of the 
+		The k-neighbors algorithm classifies an object according to the k nearest objects from the training set. For a higher k noise might be filtered out, but class boundaries might become more vague and less accurate. Thus, it would be interesting to find out which value of k gives the highest accuracy for our dataset. There are two ways of computing the class from the neigbors. The first one is by giving all the neighbors equal weight, no matter how far or close they are.  The second is to give each neighbor a weight relative to its distance. The weighted version of the algorithm is especially useful when a dataset has areas with a varying density of training examples. 
 	
 	\subsection{Decision Tree Classifier}
 	
@@ -57,19 +57,17 @@
 	Describe the relevant features of the classifiers.
 
 \newpage
-\section{Hyper parameter optimization}
+\section{Hyper-parameter optimization}
 
-	Hyperparameter optimisation is one of the most important steps in machine learning \cite{bardenet}. The goal is to find the best hyperparameters for the given classifier, in order to optimise the loss function and to avoid overfitting \cite{Bergstra}. Some hyper parameter optimisation algorithms not only find the best hyperameters, but identify those that carry the most weight, \cite{Bergstra}.
-	There are two hyperparameter optimisation algorithims built in to scikit-learn, grid search and randomised parameter optimisation, \cite{gridsearch}, as well as alternative methods such as model specific cross validation.   \cite{HyperparameterOptimisationWiki}.  
+	Hyper-parameter optimization is one of the most important steps in machine learning \cite{bardenet}. The goal is to find the best hyper-parameters for the given classifier, in order to minimize the loss function and to avoid over-fitting \cite{Bergstra}. Some hyper-parameter optimization algorithms do not only find the best hyper-parameters, but identify those that carry the most weight \cite{Bergstra}.
+	There are two hyper-parameter optimization algorithms built into Scikit-Learn: grid search and randomized parameter optimization \cite{gridsearch}. Scikit-Learn also provides alternative methods such as model specific cross validation  \cite{HyperparameterOptimisationWiki}, but we did not use those.  
 	
 	\subsection{Grid Search}
 	
-		Grid Search optimises hyperparamters by iterating over all of the variables in a given range, and selecting the best combination to use in the chosen classifier. Grid search is guided by a perfomance metric, which is usually measured by cross-validation \cite{HyperparameterOptimisationWiki}. A disadvantage of grid search is that it can be time consuming and computationally expensive to run, \cite{HyperparameterOptimisationWiki}.
-		As grid search was recommended to us, and is the most widely used way to optimize hyper parameters, we decided to use it in our project.
-		
-	\subsection{Grid Search in Scikit-Learn}
-	
-		Scikit-Learn has a built in function for Grid Search \cite{gridsearch}, which is defined below:
+		Grid Search optimizes hyper-parameters by iterating over all of the variables in a given range and selecting the best combination to use in the chosen classifier. Grid search is guided by a performance metric, such as classification accuracy, which is usually measured by cross-validation \cite{HyperparameterOptimisationWiki}. A disadvantage of grid search is that it can be time consuming and computationally expensive to run, \cite{HyperparameterOptimisationWiki}.
+
+		As grid search was recommended to us by our teacher Rein van den Boomgaard, and is the widely used to optimize hyper-parameters, we decided to use it in our project.
+The use of Grid Search was easy as Scikit-Learn has a built-in class called GridSearchCV \cite{gridsearch}, which is defined below:
 		
 		
 	\begin{lstlisting}
@@ -79,15 +77,14 @@ GridSearchCV(estimator, param_grid, scoring=None, fit_params=None,
    return_train_score=True)
 	\end{lstlisting}
 		
-		The param \textunderscore grid is a dictionary, with the parameters you want to optimise as the keys and the range of parameters to try as the values. The grid search algorithm will then run the given classifier over the entire parameter grid in order to find the best possible combination. 
-		
-	cv stands for cross validation, which, when an integer is specified, is the amount of folds in KFold cross validation. Otherwise the default is 3 folds. 
+	When an instance of GridSearch is initialized, it takes an estimator, a param\textunderscore grid and any other parameters. The estimator would be our classification functions KNeighborsClassifier, DecisionTreeClassifier, and AdaBoostClassifier. The param\textunderscore grid is a dictionary with the parameters you want to optimize as the keys, and the range of parameters to try as the values. The grid search algorithm will then run the given classifier over the entire parameter grid in order to find the best possible combination. We also chose to use 5-fold cross validation instead of the default 3-fold cross validation by passing cv=5 to GridSearchCV.
 
+	\subsection{Implementation}
 		
-\subsection{Our use of grid search}
+
 
 		We used the built-in grid search function from scikit-learn, and ran it on each of our classifiers. The range of values selected for the hyperparameters were chosen through trial and error. We set $cv=5$, as we decided to use 5 folds in the KFold cross validation scheme. 
-\\
+
 
 		
 		The output of GridSearch is the a dict, with the names of the hyperparameter as keys, and the optimal result as values. 
@@ -98,19 +95,10 @@ GridSearchCV(estimator, param_grid, scoring=None, fit_params=None,
 
 	We than ran the classifiers on the training data with the optimal parameters, and computed the new accuracy scores. 
 
-\newpage
-
-\section{Evaluation of Approach and Solution} 
-	All the curves, the results
 
 
-	The other hyperparamter optimisation function built in to  scikit-learn is randomized parameter optimisation \cite{gridsearch}. Instead of iterating over each potential combination of parameters, like grid search, it randomly selects these combinations. The advantage if this is that it can be less computationally expensive than grid search, and that adding parameters that do not influence the performance does not decrease the algorithms efficiency. The number of random samples that are tried can be specified.  As AdaBoost had such a high amount of hyperparameter combinations, using randomised parameter optimisation in this case may reduced the computation time. 
 
-	An improvement would be a better way to select the range of hyperparameters to test, rather than to use trial and error.
 
-	Another improvement would be to look at choosing another value for the k-folds, instead of default 5. 
-
-\newpage
 \section{Results}
 
 The accuracy of classifiers with optimised hyperparameters were graphed against those without optimised hyperparameters:
@@ -148,6 +136,16 @@ One of the hyperparameters we needed to tune for k-neighbors were the wieights. 
 
 The optimal hyperparameters chosen for K-Neighbors was that $n$ \textunderscore $neighbors = 1,$ and $weights = 'uniform'$
 
+
+\section{Evaluation of Approach and Solution} 
+	All the curves, the results
+
+
+	The other hyperparamter optimisation function built in to  scikit-learn is randomized parameter optimisation \cite{gridsearch}. Instead of iterating over each potential combination of parameters, like grid search, it randomly selects these combinations. The advantage if this is that it can be less computationally expensive than grid search, and that adding parameters that do not influence the performance does not decrease the algorithms efficiency. The number of random samples that are tried can be specified.  As AdaBoost had such a high amount of hyperparameter combinations, using randomised parameter optimisation in this case may reduced the computation time. 
+
+	An improvement would be a better way to select the range of hyperparameters to test, rather than to use trial and error.
+
+	Another improvement would be to look at choosing another value for the k-folds, instead of default 5. 
 
 \bibliographystyle{unsrt}
 \bibliography{ProjectReport}
