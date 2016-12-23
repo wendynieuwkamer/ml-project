@@ -39,24 +39,24 @@
 		\item Which hyper-parameters have the most effect on the classifier?
 	\end{itemize}
 	
-	The answers to these questions are specific to the Scikit-Learn package.
+	The answers to these questions are specific to the Scikit-Learn package. In this section we will discuss how the classifiers work, more information on the hyper-parameters we chose to optimize can be found in the next section.
 	
-	\subsection{K-neighbors}
-		The k-neighbors algorithm classifies an object according to the k nearest objects from the training set. For a higher k noise might be filtered out, but class boundaries might become more vague and less accurate. Thus, it would be interesting to find out which value of k gives the highest accuracy for our dataset. There are two ways of computing the class from the neigbors. The first one is by giving all the neighbors equal weight, no matter how far or close they are.  The second is to give each neighbor a weight relative to its distance. The weighted version of the algorithm is especially useful when a dataset has areas with a varying density of training examples. 
+	\paragraph{K-neighbors}
+		The k-neighbors algorithm classifies an object according to the k nearest objects from the training set. For a higher k noise might be filtered out, but class boundaries might become more vague and less accurate. Thus, it would be interesting to find out which value of k gives the highest accuracy for our dataset. There are two ways of computing the class from the neighbors. The first one is by giving all the neighbors equal weight, no matter how far or close they are.  The second is to give each neighbor a weight relative to its distance. The weighted version of the algorithm is especially useful when a dataset has areas with a varying density of training examples. 
 	
-	\subsection{Decision Tree Classifier}
+	\paragraph{Decision Tree Classifier}
+		Decision trees is a very intuitive method of doing classification. When learning a Decision tree a set of rules  is constructed, which can be used to make predictions. There are two criteria to construct these rules which are often used. the first is information gain, where the split with the highest information gain is added to the tree. The second is Gini Impurity which looks at possible incorrect labeling. There are several advantages to using decision trees, such as the fact that they are very simple to understand, they require little data preparation and they are able to handle multiple outputs. However, it is important to avoid over-fitting by setting a maximum depth and/or a minimum amount of samples per leaf, especially in datasets with many features and few samples. Also, they work best on a balanced dataset, like the dataset provided by Kaggle for leaf classification. Finally, creating the optimal decision tree is very hard, so it is often best to use it in an ensemble, such as the RandomForestClassifier. Delaney also tried the RandomForestClassifier, but we chose the DecisionTreeClassifier as the initial accuracy was lower.
 	
-	\subsection{Gaussian Naive Bayes}
+	\paragraph{Gaussian Naive Bayes}
 	
-	\subsection{Ada Boost Classifier}
+	\paragraph{Ada Boost Classifier}
+		AdaBoost stands for adaptive Boosting and is used to improve other algorithms' performances The goal is to create a strong classifier from weak classifiers, traditionally it is used with decision trees. It does this by fitting the classifier and then giving the examples which were wrongly classified a higher weight, which increases the performance on difficult samples. It improves the classifier by only using those features which actually improve the performance of the classifier, thus reducing dimensionality and possibly computation time. However, this also means that it is sensitive to outliers and noisy data. 
 	
-	\subsection{Quadratic Discriminant Analysis}
+	\paragraph{Quadratic Discriminant Analysis}
 
-\section{Choices made and justifications}
-	Which classifiers you chose ; why?  
-	Describe the relevant features of the classifiers.
 
-\newpage
+
+
 \section{Hyper-parameter optimization}
 
 	Hyper-parameter optimization is one of the most important steps in machine learning \cite{bardenet}. The goal is to find the best hyper-parameters for the given classifier, in order to minimize the loss function and to avoid over-fitting \cite{Bergstra}. Some hyper-parameter optimization algorithms do not only find the best hyper-parameters, but identify those that carry the most weight \cite{Bergstra}.
@@ -71,29 +71,37 @@ The use of Grid Search was easy as Scikit-Learn has a built-in class called Grid
 		
 		
 	\begin{lstlisting}
-GridSearchCV(estimator, param_grid, scoring=None, fit_params=None, 
+GridSearchCV(estimator, param_grid, scoring=None,
+ fit_params=None, 
    n_jobs=1, iid=True, refit=True, cv=None, verbose=0, 
    pre_dispatch='2*n_jobs', error_score='raise',
    return_train_score=True)
 	\end{lstlisting}
 		
-	When an instance of GridSearch is initialized, it takes an estimator, a param\textunderscore grid and any other parameters. The estimator would be our classification functions KNeighborsClassifier, DecisionTreeClassifier, and AdaBoostClassifier. The param\textunderscore grid is a dictionary with the parameters you want to optimize as the keys, and the range of parameters to try as the values. The grid search algorithm will then run the given classifier over the entire parameter grid in order to find the best possible combination. We also chose to use 5-fold cross validation instead of the default 3-fold cross validation by passing cv=5 to GridSearchCV.
+	When an instance of GridSearch is initialized, it takes an estimator, a param\textunderscore grid and any other parameters. The estimator would be our classification functions KNeighborsClassifier, DecisionTreeClassifier, and AdaBoostClassifier. The param\textunderscore grid is a dictionary with the parameters you want to optimize as the keys, and the range of parameters to try as the values. Finding the optimal range of parameters to pass on to GridSearch is a matter of trial and error. The grid search algorithm will then run the given classifier over the entire parameter grid in order to find the best possible combination. We also chose to use 5-fold cross validation instead of the default 3-fold cross validation by passing cv=5 to GridSearchCV. 
 
 	\subsection{Implementation}
+		Before running the GridSearch we had to prepare our dataset. To do this we used Delaney's code \cite{showdown}, which used a StratifiedShuffleSplit to divide the dataset in such a way that both the test set and the training set contain all classes.  The code was updated to fit our needs and to use updated packages. Then, we defined the param\textunderscore grids for each classifier and ran the GridSearch. Finally, the data found during the GridSearch is visualized to show how different hyper-parameters influence the accuracy of the classifier.
+		\paragraph{KNeighborsClassifier}
+			For the K-Neighbors classifier we chose to optimize the hyper-parameters n\textunderscore neighbors in the range from 1 to 50 for uniform weights and using distance as a weight. Metric is the way distance is calculated, the default is 'minkowski', which is basically the euclidean distance if p is two. We saw no reason to change this for our data, thus we excluded metric, metric\textunderscore params and p from the GridSearch. Scikit-Learn also offers the following hyper-parameters: algorithm, leaf\textunderscore size, and n\textunderscore jobs. However, we chose not to optimize those as they either optimize themselves (algorithm), affect speed (leaf\textunderscore size), or refer to the number of CPU cores used (n\textunderscore jobs). 
+			
+		\paragraph{DecisionTreeClassifier}
+			For the Decision Tree classifier we chose to optimize criterion, splitter and min\textunderscore samples\textunderscore leaf. Criterion can be gini or entropy, split either chooses the best split, or a random split from the best ones and min\textunderscore samples\textunderscore leaf decides how many samples each leaf should minimally have. We did not optimize max\textunderscore depth, max\textunderscore leaf\textunderscore nodes or min\textunderscore samples\textunderscore split because we already optimize min\textunderscore samples\textunderscore leaf. We did not  optimize min\textunderscore weight\textunderscore fraction\textunderscore leaf, max\textunderscore features, random\textunderscore state, min\textunderscore impurity\textunderscore split or class\textunderscore weight because they are not relevant to our data. Finally, we were interested in presort, but if it is set to True it would take a lot of time to train.
+		\paragraph{AdaBoostClassifier}
+			For the AdaBoostClassifier we chose to optimize n\textunderscore estimators and learning\textunderscore rate. 
+ 			
+
+		 The range of values selected for the hyper-parameters were chosen through trial and error. 
+
+
 		
-
-
-		We used the built-in grid search function from scikit-learn, and ran it on each of our classifiers. The range of values selected for the hyperparameters were chosen through trial and error. We set $cv=5$, as we decided to use 5 folds in the KFold cross validation scheme. 
-
-
-		
-		The output of GridSearch is the a dict, with the names of the hyperparameter as keys, and the optimal result as values. 
+		The output of GridSearch is  a dictionary, with the names of the hyper-parameter as keys, and the optimal result as values. 
 		
 		\begin{lstlisting}
 {hyperparameter: optimal value, hyperparameter: optimal value}
 		\end{lstlisting}
 
-	We than ran the classifiers on the training data with the optimal parameters, and computed the new accuracy scores. 
+	We then ran the classifiers on the training data with the optimal parameters, and computed the new accuracy scores. 
 
 
 
@@ -120,7 +128,7 @@ The optimal hyperparameters for AdaBoost were found to be $n$\textunderscore $es
 \subsection{Decision Trees}
 
 
-\includegraphics[scale=0.6]{d_trees_crop}
+
 
 The accuracy of decision trees were comparatively not as improved as much as the accuracy of the other two were. This was because the default parameters used in the 10 classifier showdown \cite{showdown} happened to be similar to the optimal parameters as found by grid search. 
 
@@ -128,23 +136,26 @@ Interestingly, the difference between grid search using entropy, or using Gini w
 
 The optimal hyperparameters found for decision trees were to be $splitter = 'best', criterion = 'entropy'$ and $min$ \textunderscore $samples$ \textunderscore $leaf = '1'$
 
+\includegraphics[scale=0.6]{d_trees_crop}
+
 \subsection{K-Neighbors}
 
-\includegraphics[scale=0.6]{k-nboors}
 
-One of the hyperparameters we needed to tune for k-neighbors were the wieights. We needed to choose between using uniform weights or distance as weights. The accuracy graphs clearly show that the accuracy rate for k-neighbors with uniform weights quickly tails of when the number of neighbors increases, whereas the accuracy when using distance as weights remains relatively high as the number of neighbours increases. 
+
+One of the hyperparameters we needed to tune for k-neighbors were the weights. We needed to choose between using uniform weights or distance as weights. The accuracy graphs clearly show that the accuracy rate for k-neighbors with uniform weights quickly tails of when the number of neighbors increases, whereas the accuracy when using distance as weights remains relatively high as the number of neighbours increases. 
 
 The optimal hyperparameters chosen for K-Neighbors was that $n$ \textunderscore $neighbors = 1,$ and $weights = 'uniform'$
 
+\includegraphics[scale=0.6]{k-nboors}
 
 \section{Evaluation of Approach and Solution} 
-	All the curves, the results
+
 
 
 	The other hyperparamter optimisation function built in to  scikit-learn is randomized parameter optimisation \cite{gridsearch}. Instead of iterating over each potential combination of parameters, like grid search, it randomly selects these combinations. The advantage if this is that it can be less computationally expensive than grid search, and that adding parameters that do not influence the performance does not decrease the algorithms efficiency. The number of random samples that are tried can be specified.  As AdaBoost had such a high amount of hyperparameter combinations, using randomised parameter optimisation in this case may reduced the computation time. 
 
 	An improvement would be a better way to select the range of hyperparameters to test, rather than to use trial and error.
-
+	For Decision Trees it would be interesting to look at the influence of presort.
 	Another improvement would be to look at choosing another value for the k-folds, instead of default 5. 
 
 \bibliographystyle{unsrt}
