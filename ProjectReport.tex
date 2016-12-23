@@ -57,8 +57,6 @@
 		Quadratic Discriminant Analysis is a classical classifier which uses Bayes' rule and a Gaussian distribution. Like the Gaussian Naive Bayes classifier there are no parameters to optimize, so we decided not to include it in our experiments.
 
 
-
-
 \section{Hyper-parameter optimization}
 
 	Hyper-parameter optimization is one of the most important steps in machine learning \cite{bardenet}. The goal is to find the best hyper-parameters for the given classifier, in order to minimize the loss function and to avoid over-fitting \cite{Bergstra}. Some hyper-parameter optimization algorithms do not only find the best hyper-parameters, but identify those that carry the most weight \cite{Bergstra}.
@@ -74,10 +72,9 @@ The use of Grid Search was easy as Scikit-Learn has a built-in class called Grid
 		
 	\begin{lstlisting}
 GridSearchCV(estimator, param_grid, scoring=None,
- fit_params=None, 
-   n_jobs=1, iid=True, refit=True, cv=None, verbose=0, 
-   pre_dispatch='2*n_jobs', error_score='raise',
-   return_train_score=True)
+   fit_params=None,  n_jobs=1, iid=True, refit=True,
+   cv=None, verbose=0,  pre_dispatch='2*n_jobs',
+   error_score='raise',  return_train_score=True)
 	\end{lstlisting}
 		
 	When an instance of GridSearch is initialized, it takes an estimator, a param\textunderscore grid and any other parameters. The estimator would be our classification functions KNeighborsClassifier, DecisionTreeClassifier, and AdaBoostClassifier. The param\textunderscore grid is a dictionary with the parameters you want to optimize as the keys, and the range of parameters to try as the values. Finding the optimal range of parameters to pass on to GridSearch is a matter of trial and error. The grid search algorithm will then run the given classifier over the entire parameter grid in order to find the best possible combination. We also chose to use 5-fold cross validation instead of the default 3-fold cross validation by passing cv=5 to GridSearchCV. 
@@ -93,57 +90,57 @@ GridSearchCV(estimator, param_grid, scoring=None,
 		\paragraph{AdaBoostClassifier}
 			For the AdaBoostClassifier we chose to optimize n\textunderscore estimators and learning\textunderscore rate. n\textunderscore estimators is the maximum amount of estimators used; more estimators means a better fit, so we tried a range from 25 to 75 estimators. learning\textunderscore rate is the rate at which contributions of the consecutive classifiers shrinks, this is linked to the amount of estimators used. Finding the proper range for learning\textunderscore rate was quite hard, but finally we settled on 0.01 to 0.09 in 9 steps. It does not fit within the scope of our research to use a different base\textunderscore estimator. Changing algorithm would slow the process down, so this is excluded. Finally, we do not change random\textunderscore state as the random number generator should not have a big effect on the results. 
 
+\newpage
 
 \section{Results}
 
+\paragraph{AdaBoost}
+
+
+Figure \ref{fig:abres} shows how grid search across each of the different hyper-parameter combinations improved the accuracy of AdaBoost. The numbers on the x-axis corresponds to a different combination of hyper-parameters. As can be clearly seen from the graph the amount of possible combinations was very high. This was computationally quite expensive, and running grid search on AdaBoost took a long time compared to the other classifiers. 
+
+The optimal hyper-parameters for AdaBoost were found to be $n\_estimators = 72$ with $learning\_rate = 0.03$
+\begin{figure}
+\includegraphics[scale=0.6]{adaboost_crop}
+\caption{GridSearch AdaBoost}
+\label{fig:abres}
+\end{figure}
+\paragraph{Decision Trees}
+The accuracy of decision trees were comparatively not as improved as much as the accuracy of the other two were. This was because the default parameters used in the 10 classifier showdown \cite{showdown} happened to be similar to the optimal parameters as found by grid search. 
+
+Interestingly, the difference between grid search using entropy, or using Gini was minimal, as can be seen in figure \ref{fig:dtres}. This suggests that for this problem the splitting criteria hyper-parameter does not hold much weight as other hyper-parameters might. 
+
+The optimal hyper-parameters found for decision trees were to be $splitter = 'best', criterion = 'entropy'$ and $min\_samples\_leaf = '1'$
+
+\begin{figure}
+\includegraphics[scale=0.6]{d_trees_crop}
+\caption{GridSearch Decision Tree}
+\label{fig:dtres}
+\end{figure}
+
+\paragraph{K-Neighbors}
+One of the hyper-parameters we needed to tune for k-neighbors were the weights. We needed to choose between using uniform weights or distance as weights. The accuracy graphs in figure \ref{fig:knres} clearly show that the accuracy rate for k-neighbors with uniform weights quickly tails of when the number of neighbors increases, whereas the accuracy when using distance as weights remains relatively high as the number of neighbors increases. 
+
+The optimal hyper-parameters chosen for K-Neighbors was that $n\_neighbors = 1,$ and $weights = 'uniform'$
+\begin{figure}
+\includegraphics[scale=0.6]{k-nboors}
+\caption{GridSearch KNeigbors}
+\label{fig:knres}
+\end{figure}
+
+\paragraph{Optimized Accuracies}
 The accuracy of classifiers with optimized hyper-parameters were graphed against those without optimized hyper-parameters:
 
 \includegraphics[scale=0.7]{acc_class}
 
 In each of the cases, grid search clearly improved the accuracy of the classifier, reaffirming the importance of hyper-parameter optimization in machine learning. 
-
-AdaBoost was significantly improved by hyper-parameter optimization, from $4.56\%$ to $51.52\%$. This is due to the fact that the default parameters that were used in the 10 Classifier Showdown \cite{showdown} were inadequate for the leaf classification problem. K-neighbors was improved from $88.89\%$ to $90.91\%$, and Decision Trees were improved from $60.10\%$ to $66.16\%$. 
-
-\subsection{AdaBoost}
-
-\includegraphics[scale=0.6]{adaboost_crop}
-
-The graph above shows how grid search across each of the different hyper-parameter combinations improved the accuracy of AdaBoost. The numbers on the x-axis corresponds to a different combination of hyper-parameters. As can be clearly seen from the graph the amount of possible combinations was very high. This was computationally quite expensive, and running grid search on AdaBoost took a long time compared to the other classifiers. 
-
-The optimal hyper-parameters for AdaBoost were found to be $n$\textunderscore $estimators = 72$ with $learning$ \textunderscore $rate = 0.03$
-
-\subsection{Decision Trees}
-
-
-
-
-The accuracy of decision trees were comparatively not as improved as much as the accuracy of the other two were. This was because the default parameters used in the 10 classifier showdown \cite{showdown} happened to be similar to the optimal parameters as found by grid search. 
-
-Interestingly, the difference between grid search using entropy, or using Gini was minimal, as can be seen from the graph. This suggests that for this problem the splitting criteria hyper-parameter does not hold much weight as other hyper-parameters might. 
-
-The optimal hyper-parameters found for decision trees were to be $splitter = 'best', criterion = 'entropy'$ and $min$ \textunderscore $samples$ \textunderscore $leaf = '1'$
-
-\includegraphics[scale=0.6]{d_trees_crop}
-
-\subsection{K-Neighbors}
-
-
-
-One of the hyper-parameters we needed to tune for k-neighbors were the weights. We needed to choose between using uniform weights or distance as weights. The accuracy graphs clearly show that the accuracy rate for k-neighbors with uniform weights quickly tails of when the number of neighbors increases, whereas the accuracy when using distance as weights remains relatively high as the number of neighbors increases. 
-
-The optimal hyper-parameters chosen for K-Neighbors was that $n$ \textunderscore $neighbors = 1,$ and $weights = 'uniform'$
-
-\includegraphics[scale=0.6]{k-nboors}
+However, none of the classifiers reached the $98.0\%$ which was reached by LinearDiscriminantAnalysis in Delaney's experiment. AdaBoost was significantly improved by hyper-parameter optimization, from $4.56\%$ to $51.52\%$. This is due to the fact that the default parameters that were used in the 10 Classifier Showdown \cite{showdown} were inadequate for the leaf classification problem. K-neighbors was improved from $88.89\%$ to $90.91\%$, and Decision Trees were improved from $60.10\%$ to $66.16\%$. 
 
 \section{Evaluation of Approach and Solution} 
+	The goal of our experiments was to improve the accuracy scores of some of the classifiers used in the 10 classifier showdown by optimizing their hyper-parameters \cite{showdown}. We have reached this goal, although we did not reach the $98.0\%$ which was reached by LinearDiscriminantAnalysis in Delaney's experiment. Still, we encountered a few challenges, one of which was the time it took to run GridSearch on a range of values. A solution for this could be to use another hyper-parameter optimization algorithm, such as randomized parameter optimization \cite{gridsearch}. Instead of iterating over each potential combination of parameters, like grid search, it randomly selects these combinations. An extra advatage of this is that adding parameters which do not influence the performance of the classifier does not decrease the algorithms efficiency. The number of random samples that are tried can be specified.  As AdaBoost had such a high amount of hyper-parameter combinations, using randomized parameter optimization in this case may reduced the computation time.
+	
+	Another challenge was the selection of  the range of hyper-parameters to test; we had to use trial an error, but a systematic approach might improve the results even more. Also, some of the hyper-parameters that could have been interesting, such as presort of the DecisionTreeClassifier, were not optimized as there was no time. Finally, it would be interesting whether GridSearch gives different results when a different value for cv is given, such as a higher number of folds or a different cross validation set.
 
-
-
-	The other hyper-parameter optimization function built in to  Scikit-learn is randomized parameter optimization \cite{gridsearch}. Instead of iterating over each potential combination of parameters, like grid search, it randomly selects these combinations. The advantage of this is that it can be less computationally expensive than grid search, and that adding parameters which do not influence the performance does not decrease the algorithms efficiency. The number of random samples that are tried can be specified.  As AdaBoost had such a high amount of hyper-parameter combinations, using randomized parameter optimization in this case may reduced the computation time. 
-
-	An improvement would be a better way to select the range of hyper-parameters to test, rather than to use trial and error.
-	For Decision Trees it would be interesting to look at the influence of presort.
-	Another improvement would be to look at choosing another value for the k-folds, instead of default 5. 
 
 \bibliographystyle{unsrt}
 \bibliography{ProjectReport}
