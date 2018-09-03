@@ -6,7 +6,7 @@ We, Isobel smith, Elise Mol and Wendy Nieuwkamer, have created this repository f
 
 ## Research question
 
-The problem we are aiming to solve is one of the (challenges on Kaggle)[https://www.kaggle.com/c/leaf-classification]. The question is whether we can identify trees by looking at simplified images of their leaves. This has many applications in for example, forest documentation and preservation, crop management and herbal medicine. Also, a fast algorithm might make the development of an instant identification app possible which could be used by campers and backpackers.
+The problem we are aiming to solve is one of the [challenges on Kaggle](https://www.kaggle.com/c/leaf-classification). The question is whether we can identify trees by looking at simplified images of their leaves. This has many applications in for example, forest documentation and preservation, crop management and herbal medicine. Also, a fast algorithm might make the development of an instant identification app possible which could be used by campers and backpackers.
 
 We will aim to optimise the classifications as used in the [10 classifier showdown](https://www.kaggle.com/jeffd23/leaf-classification/10-classifier-showdown-in-scikit-learn) and tune the parameters. 
 
